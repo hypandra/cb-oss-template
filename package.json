@@ -11,7 +11,10 @@
     "db:guard": "node tools/migration-guard/guard.mjs"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.57.4",
+    "@xyflow/react": "^12.9.3",
     "better-auth": "^1.4.12",
+    "dagre": "^0.8.5",
     "next": "^16.1.1",
     "pg": "^8.13.1",
     "react": "^19.0.0",
@@ -25,6 +28,7 @@
     "@radix-ui/react-alert-dialog": "^1.1.4"
   },
   "devDependencies": {
+    "@types/dagre": "^0.7.52",
     "@tailwindcss/typography": "^0.5.15",
     "@types/node": "^22",
     "@types/pg": "^8.11.10",
