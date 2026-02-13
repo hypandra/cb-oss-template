@@ -7,7 +7,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { ThemeSwitcher } from '@/components/theme-switcher'
 import { config } from '@/lib/config'
 import { themes, type ThemeName } from '@/lib/themes'
-import { Sparkles, Upload, Zap, Shield, ArrowRight } from 'lucide-react'
+import { Sparkles, Upload, Zap, Shield, ArrowRight, Play } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const FEATURES = [
@@ -70,6 +70,9 @@ export default function LandingPage() {
           </span>
         </div>
         <nav className={cn('hidden md:flex items-center gap-6 text-sm', t.bodyFont)}>
+          <Link href="/demo" className={t.navLink}>
+            Demos
+          </Link>
           <Link href="#features" className={t.navLink}>
             Features
           </Link>
@@ -111,13 +114,13 @@ export default function LandingPage() {
             </p>
             <div className="flex flex-wrap justify-center gap-3 pt-4">
               <Button size="lg" asChild className={t.buttonPrimary}>
-                <Link href="/signup">
-                  Start for free
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                <Link href="/demo">
+                  Try the demos
+                  <Play className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
               <Button size="lg" variant="outline" asChild className={t.buttonSecondary}>
-                <Link href="#features">See features</Link>
+                <Link href="/signup">Get started</Link>
               </Button>
             </div>
           </div>
