@@ -4,6 +4,9 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
+import { PromptViewerDialog } from '@/components/recipes/prompt-transparency/PromptViewerDialog'
+import ThumbsFeedback from '@/components/recipes/thumbs-feedback/ThumbsFeedback'
+import { QUERY_SYSTEM_PROMPT, SUMMARY_SYSTEM_PROMPT } from '@/components/recipes/multi-llm/prompts'
 
 interface MultiLLMDemoProps {
   hasConfig: boolean
@@ -94,7 +97,12 @@ export function MultiLLMDemo({ hasConfig }: MultiLLMDemoProps) {
           <CardContent className="space-y-3 p-4">
             <div className="flex items-center justify-between gap-2">
               <h2 className="text-base font-semibold text-balance">{result.package.headline}</h2>
-              <span className="text-xs text-muted-foreground uppercase">{result.mode || 'live'}</span>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] bg-black/60 text-white px-1.5 py-0.5 rounded whitespace-nowrap">
+                  AI-written · Claude 3.5 Haiku via OpenRouter
+                </span>
+                <span className="text-xs text-muted-foreground uppercase">{result.mode || 'live'}</span>
+              </div>
             </div>
             <p className="text-sm text-muted-foreground text-pretty">{result.package.intro}</p>
             <p className="text-sm text-pretty">{result.package.summary}</p>
@@ -112,9 +120,30 @@ export function MultiLLMDemo({ hasConfig }: MultiLLMDemoProps) {
                   <a href={source.url} target="_blank" rel="noreferrer" className="text-sm font-medium underline">
                     {source.title}
                   </a>
-                  <p className="mt-1 text-xs text-muted-foreground text-pretty">{source.notes}</p>
+                  <p className="mt-1 text-xs text-muted-foreground text-pretty">
+                    <span className="italic text-muted-foreground/60">AI note:</span> {source.notes}
+                  </p>
                 </div>
               ))}
+            </div>
+
+            <div className="flex items-center justify-between border-t pt-3">
+              <PromptViewerDialog
+                label="Multi-LLM Orchestration"
+                description="Two LLM calls power this result: a planner that generates search queries, and a summarizer that packages the findings."
+                prompt={{
+                  systemPrompt: QUERY_SYSTEM_PROMPT + '\n\n---\n\n' + SUMMARY_SYSTEM_PROMPT,
+                  context: 'Planning model: anthropic/claude-3.5-haiku (temp 0.5)\nSummary model: anthropic/claude-3.5-haiku (temp 0.4)\nSearch: Parallel AI web search API\nProvider: OpenRouter',
+                }}
+              />
+              <ThumbsFeedback
+                entityType="demo-research"
+                entityId={`research-${Date.now()}`}
+                prompt="Was this research helpful?"
+                textPlaceholder="What was missing?"
+                endpoint="/api/demo/feedback"
+                disableNetwork
+              />
             </div>
           </CardContent>
         </Card>

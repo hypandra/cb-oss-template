@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { ImageRefineDialog } from '@/components/recipes/image-refinement/components/ImageRefineDialog'
+import { PromptViewerDialog } from '@/components/recipes/prompt-transparency/PromptViewerDialog'
+import ThumbsFeedback from '@/components/recipes/thumbs-feedback/ThumbsFeedback'
 
 interface ImageRefinementDemoProps {
   hasOpenRouter: boolean
@@ -75,13 +77,36 @@ export function ImageRefinementDemo({ hasOpenRouter }: ImageRefinementDemoProps)
       {image ? (
         <Card>
           <CardContent className="space-y-3 p-4">
-            <img src={image.url} alt="Generated" className="w-full rounded-md border" />
+            <div className="relative">
+              <img src={image.url} alt="Generated" className="w-full rounded-md border" />
+              <span className="absolute top-2 left-2 text-[10px] bg-black/60 text-white px-1.5 py-0.5 rounded">
+                AI-generated · Gemini 2.5 Flash via OpenRouter
+              </span>
+            </div>
             <div className="flex items-center justify-between gap-2">
               <p className="text-xs text-muted-foreground text-pretty">Source prompt: {image.sourceText}</p>
-              <Button type="button" variant="outline" onClick={() => setDialogOpen(true)}>
-                Refine
-              </Button>
+              <div className="flex items-center gap-1">
+                <PromptViewerDialog
+                  label="Image Generation"
+                  description="The prompt sent to the image generation model."
+                  prompt={{
+                    systemPrompt: image.sourceText,
+                    context: 'Model: google/gemini-2.5-flash-image\nProvider: OpenRouter\nOutput: PNG image from text prompt\nNo system prompt — user prompt sent directly as image generation instruction.',
+                  }}
+                />
+                <Button type="button" variant="outline" onClick={() => setDialogOpen(true)}>
+                  Refine
+                </Button>
+              </div>
             </div>
+            <ThumbsFeedback
+              entityType="demo-image"
+              entityId={image.id}
+              prompt="Was this image what you expected?"
+              textPlaceholder="What was off?"
+              endpoint="/api/demo/feedback"
+              disableNetwork
+            />
           </CardContent>
         </Card>
       ) : null}
